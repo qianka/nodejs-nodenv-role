@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  company: Qianka Inc.
+  min_ansible_version: 1.5
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+  categories:
+    - system
+dependencies: [
+  'qianka.ubuntu-common'
+]

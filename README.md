@@ -1,38 +1,56 @@
-Role Name
-=========
+nodejs-nodenv-role
+==================
 
-A brief description of the role goes here.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Ubuntu Server 14.04 LTS
+- Ansible 1.5+
+
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- nodenv_repo
+- nodenv_build_repo
+- nodenv_update
+- node_version
+- node_source_path  
+  `/opt/source`
+- node_source_url
+- node_source_file
+- node_source_checksum  
+  _sha256 of python source file_
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- qianka.ubuntu-common
+
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yml
+- hosts: all
+  user: root
+  vars:
+    ubuntu_apt_mirror: http://mirrors.aliyun.com/ubuntu
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+    - { role: qianka.nodejs-nodenv,
+        node_version: 0.10.32,
+        node_source_url: 'https://npm.taobao.org/dist/v0.10.32/node-v0.10.32.tar.gz',
+        node_source_file: node-v0.10.32.tar.gz,
+        node_source_checksum: c2120d0e3d2d191654cb11dbc0a33a7216d53732173317681da9502be0030f10
+      }
+```
+
 
 License
 -------
 
-BSD
 
 Author Information
 ------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).

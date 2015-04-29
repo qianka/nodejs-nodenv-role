@@ -1,0 +1,6 @@
+---
+nodenv_repo: https://github.com/OiNutter/nodenv.git
+nodenv_build_repo: https://github.com/OiNutter/node-build.git
+nodenv_update: yes
+
+node_source_path: /opt/sources

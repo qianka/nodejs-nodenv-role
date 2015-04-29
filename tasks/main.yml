@@ -1,0 +1,64 @@
+---
+- name: install nodenv from source
+  git: repo={{ nodenv_repo }}
+       dest=/opt/nodenv
+       update={{ nodenv_update }}
+       accept_hostkey=yes
+
+- name: install node-build from source
+  git: repo={{ nodenv_build_repo }}
+       dest=/opt/nodenv/plugins/node-build
+       update={{ nodenv_update }}
+       accept_hostkey=yes
+
+- name: install nodejs deps
+  apt: pkg={{ item }}
+       state=present
+       update_cache=yes
+  with_items:
+    - git
+    - curl
+    - build-essential
+
+- name: install shell profile for nodenv
+  copy: src=nodenv-profile.sh
+        dest=/etc/profile.d/50-nodenv.sh
+        owner=root group=root mode=0644
+
+- name: install sudoer for nodenv
+  copy: src=nodenv-sudoers
+        dest="/etc/sudoers.d/50-nodenv"
+        owner=root group=root mode=0644
+
+#
+#
+#
+
+- name: ensure sources directory exists
+  file: path={{ node_source_path }}
+        owner=root group=root mode=0755
+        state=directory
+  when: node_version is defined
+
+- name: download nodejs source
+  get_url: url={{ node_source_url }}
+           dest={{ node_source_path }}
+           sha256sum={{ node_source_checksum }}
+  when: node_version is defined
+
+- name: install nodejs
+  script: install-nodejs.sh {{ node_version }}
+          creates=/opt/nodenv/versions/{{ node_version }}
+  environment:
+    NODE_BUILD_MIRROR_URL: file://{{ node_source_path }}/{{ node_source_file }}#
+  when: node_version is defined
+
+
+# - name: set default node version
+#   template: src=version
+#             dest=/opt/nodenv/version
+#
+# - name: .npmrc for root
+#   copy: src=npmrc
+#         dest=/root/.npmrc
+#         owner=root group=root mode=0644
